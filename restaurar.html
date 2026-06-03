@@ -15,10 +15,8 @@ function restaurar(){
   s.style.color='#856404';
   var dados=atob(b64);
   var p=JSON.parse(dados);
-  s.textContent='Enviando '+p.compras.length+' compras para o servidor...';
+  s.textContent='Enviando '+p.compras.length+' compras, '+p.vendas.length+' vendas, '+p.caixa.length+' caixa...';
   d.textContent='Tamanho: '+(dados.length/1024).toFixed(0)+' KB';
-  
-  // Envia como JSON no body (sem FormData)
   fetch(API_URL+'?action=save&empresa=matriz', {
     method:'POST',
     headers:{'Content-Type':'text/plain'},
@@ -28,15 +26,14 @@ function restaurar(){
   .then(function(res){
     d.textContent='Resposta: '+JSON.stringify(res);
     if(res.ok){
-      s.textContent='SUCESSO! '+p.compras.length+' compras e '+p.vendas.length+' vendas restauradas!';
+      s.textContent='SUCESSO! Dados do backup 02/06/2026 15:59 restaurados!';
       s.style.color='#155724';
     } else {
       s.textContent='Erro: '+JSON.stringify(res);
       s.style.color='red';
     }
   }).catch(function(e){
-    s.textContent='Erro de conexao: '+e;
-    d.textContent='Verifique o console (F12)';
+    s.textContent='Erro: '+e;
     s.style.color='red';
   });
 }

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html><head><meta charset="UTF-8"><title>Verificar Dados Atuais</title></head>
+<body style="font-family:Arial;padding:40px;text-align:center">
+<h2>Verificar Dados no Drive</h2>
+<p id="status" style="font-size:18px;color:#1a6b2f;font-weight:bold">Clique para ver quantos registros estão salvos agora</p>
+<button onclick="verificar()" style="padding:16px 32px;background:#1565C0;color:#fff;border:none;border-radius:8px;font-size:16px;cursor:pointer;margin-top:20px">Verificar Dados Atuais</button>
+<div id="resultado" style="margin-top:20px;font-size:14px;color:#333"></div>
+<script>
+var API_URL='https://script.google.com/macros/s/AKfycbzPgdR3k3z6C1TmwL8Ha4GMXGIw8JCGWZWG_bAS0wCFh56Vf0ZqPKGImbKqm4dhuLg8Rw/exec';
+function verificar(){
+  document.getElementById('status').textContent='Buscando dados...';
+  fetch(API_URL+'?action=load&empresa=matriz&t='+Date.now())
+    .then(function(r){return r.json();})
+    .then(function(res){
+      if(res.ok && res.data){
+        var d=JSON.parse(res.data);
+        var r=document.getElementById('resultado');
+        r.innerHTML='<b>Dados atuais no Drive:</b><br>'+
+          'Compras: <b>'+d.compras.length+'</b><br>'+
+          'Vendas: <b>'+d.vendas.length+'</b><br>'+
+          'Caixa: <b>'+d.caixa.length+'</b><br>'+
+          'Receber: <b>'+d.receber.length+'</b><br>'+
+          'Pagar: <b>'+d.pagar.length+'</b><br>'+
+          'Adiantamentos: <b>'+d.adiantamentos.length+'</b>';
+        document.getElementById('status').textContent='Dados encontrados!';
+        document.getElementById('status').style.color='#155724';
+      } else {
+        document.getElementById('status').textContent='Drive vazio ou erro';
+        document.getElementById('status').style.color='red';
+      }
+    }).catch(function(e){
+      document.getElementById('status').textContent='Erro: '+e;
+      document.getElementById('status').style.color='red';
+    });
+}
+</script></body></html>
